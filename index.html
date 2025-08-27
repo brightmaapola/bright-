@@ -1,0 +1,235 @@
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bottle flute</title>
+    <style>
+        /* Base Reset & Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body, html {
+            height: 100%;
+            font-family: "Times New Roman", serif;
+            color: #fff;
+            background-color: #000;
+            overflow: hidden;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        /* Container for video and content */
+        .container {
+            position: relative;
+            height: 100vh;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        /* Full-screen video background */
+        #bg-video {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            transform: translateX(-50%) translateY(-50%);
+            z-index: -1;
+            /* Apply a B&W or sepia filter for the cinematic feel */
+            filter: grayscale(100%) brightness(70%);
+        }
+
+        /* Main headline styling */
+        .headline {
+            font-size: 7vw; /* Responsive font size */
+            font-weight: normal;
+            letter-spacing: 0.05em;
+            margin-bottom: 2rem;
+            z-index: 10;
+            cursor: default;
+        }
+
+        /* "ENTER" button/link styling */
+        .enter-button {
+            border: 1px solid #fff;
+            padding: 0.8rem 2.5rem;
+            font-size: 1rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            background: transparent;
+            color: #fff;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+        .enter-button:hover {
+            background: #fff;
+            color: #000;
+            cursor: pointer;
+        }
+
+        /* Menu (Hamburger) Icon */
+        .menu-toggle {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            width: 30px;
+            height: 30px;
+            z-index: 100;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .menu-toggle span {
+            height: 1px;
+            width: 100%;
+            background: #fff;
+            margin: 2px 0;
+            transition: 0.3s;
+        }
+        /* Animation for when menu is open (first and third line form an X) */
+        .menu-open .menu-toggle span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+        .menu-open .menu-toggle span:nth-child(2) {
+            opacity: 0;
+        }
+        .menu-open .menu-toggle span:nth-child(3) {
+            transform: rotate(-45deg) translate(7px, -8px);
+        }
+
+        /* Full-screen overlay navigation menu */
+        .nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 50;
+            /* Hide it initially */
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s;
+        }
+        /* Class to show the menu, toggled by JavaScript */
+        .nav-open .nav-overlay {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Styling for the list of links inside the overlay */
+        .nav-links {
+            list-style: none;
+            text-align: center;
+        }
+        .nav-links li {
+            margin: 2rem 0;
+        }
+        .nav-links a {
+            font-size: 2rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            padding: 0.5rem;
+            display: block;
+            transition: color 0.3s ease;
+        }
+        .nav-links a:hover {
+            color: #ccc;
+        }
+
+        /* Responsive adjustments for smaller screens */
+        @media (max-width: 768px) {
+            .headline {
+                font-size: 10vw;
+            }
+            .nav-links a {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <!-- The video background -->
+        <video playsinline autoplay muted loop id="bg-video">
+            <!-- REPLACE WITH YOUR OWN VIDEO FILE -->
+            <source src="your-cinematic-background.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+
+        <!-- The main headline -->
+        <h1 class="headline">Bottle flute</h1>
+
+        <!-- The "ENTER" button -->
+        <a href="https://bottleflute.com" target="_blank" class="enter-button">ENTER</a>
+        <!-- Replace the href with your own link -->
+
+        <!-- The hamburger menu icon -->
+        <div class="menu-toggle" id="menu-toggle">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+
+        <!-- The full-screen navigation overlay -->
+        <nav class="nav-overlay" id="nav-overlay">
+            <ul class="nav-links">
+                <li><a href="#">VIEW</a></li>
+                <li><a href="#">READ</a></li>
+                <li><a href="#">LISTEN</a></li>
+                <li><a href="content://media/external/file/1000121372">LOGIN</a></li>
+            </ul>
+        </nav>
+    </div>
+
+    <script>
+        // JavaScript to handle the menu toggle
+        const menuToggle = document.getElementById('menu-toggle');
+        const navOverlay = document.getElementById('nav-overlay');
+        const body = document.body;
+
+        menuToggle.addEventListener('click', function() {
+            // Toggle the 'nav-open' class on the body to control visibility
+            body.classList.toggle('nav-open');
+            // Toggle the 'menu-open' class for the hamburger animation
+            menuToggle.classList.toggle('menu-open');
+        });
+
+        // Optional: Close the menu when clicking on a link inside it
+        const navLinks = document.querySelectorAll('.nav-links a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                body.classList.remove('nav-open', 'menu-open');
+                menuToggle.classList.remove('menu-open');
+            });
+        });
+
+        // Optional: Close the menu when clicking on the overlay (outside the links)
+        navOverlay.addEventListener('click', function(e) {
+            if (e.target === navOverlay) { // Check if the click was directly on the overlay, not a link
+                body.classList.remove('nav-open');
+                menuToggle.classList.remove('menu-open');
+            }
+        });
+    </script>
+
+</body>
+</html>
+```
